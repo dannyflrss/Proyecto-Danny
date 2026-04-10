@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VogueLab - Inicio</title>
+
+<style>
+/* ====== GENERALES ====== */
+body{
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:#ffffff;
+  color:#222;
+}
+
+/* ===== LOGO + NAV + CARRITO ===== */
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:15px 40px;
+  border-bottom:2px solid #7b0f0f22;
+}
+.topbar img.logo{
+  width:100px;
+  height:100px;
+  object-fit:cover;
+  border-radius:12px;
+}
+nav{
+  display:flex;
+  gap:20px;
+}
+nav a{
+  color:#7b0f0f;
+  text-decoration:none;
+  font-weight:bold;
+}
+nav a:hover{
+  text-decoration:underline;
+}
+.cart{
+  width:32px;
+  cursor:pointer;
+  filter:invert(20%) sepia(80%) saturate(1500%) hue-rotate(330deg);
+}
+
+/* ====== TITULO PRINCIPAL ===== */
+.header-title{
+  text-align:center;
+  padding:25px 0;
+  background:#7b0f0f;
+  color:white;
+  font-size:32px;
+  font-weight:bold;
+  letter-spacing:2px;
+  margin-bottom:40px;
+}
+
+/* ========= CONTENEDOR 2 COLUMNAS ========= */
+.container{
+  display:flex;
+  justify-content:space-between;
+  padding:0 40px 40px 40px;
+  gap:40px;
+}
+
+/* ========= SECCIONES ========= */
+.section-box{
+  flex:1;
+}
+
+.section-box h1{
+  color:#7b0f0f;
+  margin-bottom:12px;
+}
+
+/* ====== CARRUSEL ===== */
+.carousel{
+  position: relative;
+  width: 100%;
+  height: 350px;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 0 12px #0002;
+  margin-bottom:20px;
+}
+
+.carousel img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  position:absolute;
+  top:0;
+  left:0;
+  opacity:0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.carousel img.active{
+  opacity:1;
+}
+
+.btn{
+  padding:12px 20px;
+  background:#7b0f0f;
+  color:white;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:bold;
+}
+.btn:hover{
+  background:#a31212;
+}
+
+/* ===== CARRITO (POPUP) ===== */
+#cart-popup{
+  position:fixed;
+  right:20px;
+  top:100px;
+  width:300px;
+  background:white;
+  border:2px solid #7b0f0f66;
+  border-radius:12px;
+  padding:15px;
+  display:none;
+  box-shadow:0 0 10px #0003;
+}
+#cart-popup h2{
+  color:#7b0f0f;
+  margin-top:0;
+}
+#cart-items{
+  max-height:200px;
+  overflow:auto;
+  margin-bottom:10px;
+}
+.total{
+  font-weight:bold;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SUB-HEADER (LOGO / MENÚ / CARRITO) -->
+<div class="topbar">
+  <img src="imgs/logo.jpg" class="logo" alt="Logo VogueLab">
+
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="mujer.html">Mujer</a>
+    <a href="hombre.html">Hombre</a>
+  </nav>
+
+  <img class="cart" src="https://cdn-icons-png.flaticon.com/512/34/34568.png" alt="Carrito" onclick="toggleCart()">
+</div>
+
+<!-- POPUP DEL CARRITO -->
+<div id="cart-popup">
+  <h2>Carrito</h2>
+  <div id="cart-items"></div>
+  <p class="total">Total: $<span id="cart-total">0</span></p>
+</div>
+
+<!-- HEADER PRINCIPAL DEBAJO DEL TOPBAR -->
+<div class="header-title">
+  VOGUE LABSTORE
+</div>
+
+<!-- ================== SECCIONES LADO IZQUIERDO / DERECHO ================== -->
+<div class="container">
+
+  <!-- LADO IZQUIERDO: MUJER -->
+  <section class="section-box">
+    <h1>Mujer</h1>
+    <div class="carousel" id="carousel-mujer">
+      <img src="imgs/woman1.jpg" class="active" alt="Mujer 1">
+      <img src="imgs/woman2.jpg" alt="Mujer 2">
+      <img src="imgs/woman3.jpg" alt="Mujer 3">
+    </div>
+    
+    <br><br>
+    <a href="mujer.html" class="btn">Ver colección Mujer</a>
+  </section>
+
+  <!-- LADO DERECHO: HOMBRE -->
+  <section class="section-box">
+    <h1>Hombre</h1>
+    <div class="carousel" id="carousel-hombre">
+      <img src="imgs/man1.jpg" class="active" alt="Hombre 1">
+      <img src="imgs/man2.jpg" alt="Hombre 2">
+      <img src="imgs/man3.jpg" alt="Hombre 3">
+    </div>
+    
+    <br><br>
+    <a href="hombre.html" class="btn">Ver colección Hombre</a>
+  </section>
+
+</div>
+
+<script>
+// FUNCION CARRUSEL
+function setupCarousel(carouselId){
+  const carousel = document.getElementById(carouselId);
+  const images = carousel.querySelectorAll('img');
+  let current = 0;
+
+  setInterval(() => {
+    images[current].classList.remove('active');
+    current = (current + 1) % images.length;
+    images[current].classList.add('active');
+  }, 3000);
+}
+setupCarousel('carousel-mujer');
+setupCarousel('carousel-hombre');
+
+// ==== CARRITO ==== 
+let cart = [];
+
+function addToCart(name, price){
+  cart.push({name, price});
+  updateCart();
+}
+
+function updateCart(){
+  const cartItems = document.getElementById("cart-items");
+  const total = document.getElementById("cart-total");
+
+  cartItems.innerHTML = '';
+
+  let sum = 0;
+  cart.forEach(item =>{
+    const div = document.createElement('div');
+    div.textContent = `${item.name} - $${item.price}`;
+    cartItems.appendChild(div);
+    sum += item.price;
+  });
+
+  total.textContent = sum;
+}
+
+function toggleCart(){
+  const popup = document.getElementById('cart-popup');
+  popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+}
+</script>
+
+</body>
+</html>
